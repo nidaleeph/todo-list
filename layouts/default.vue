@@ -105,33 +105,32 @@ const items = ref([
   // ... (remaining items)
 ]);
 
-function getTasksFromLocalStorage() {
+const getTasksFromLocalStorage = (() => {
   const storedTasks = localStorage.getItem(STORAGE_KEY);
   return storedTasks ? JSON.parse(storedTasks) : null;
-}
+});
 
-function saveTasksToLocalStorage() {
+const saveTasksToLocalStorage = (() => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items.value));
   totalTasks.value = items.value.length;
-}
+});
 
-const sortedItems = computed(() => items.value.slice().sort((a, b) => b.id - a.id));
 
-function updateTaskDoneCount() {
+const updateTaskDoneCount = (() => {
   taskDone.value = items.value.filter(item => item.status.done).length;
-}
+});
 
-function deleteTaskDone() {
+const deleteTaskDone = (() => {
   items.value = items.value.filter(item => !item.status.done);
   saveTasksToLocalStorage();
   updateTaskDoneCount();
-}
+});
 
-function deleteAllTasks() {
+const deleteAllTasks = (() => {
   items.value = [];
   saveTasksToLocalStorage();
   updateTaskDoneCount();
-}
+});
 
 onMounted(() => {
   const storedTasks = getTasksFromLocalStorage();
