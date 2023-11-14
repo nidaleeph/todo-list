@@ -45,7 +45,7 @@
         <v-list ref="todoList" class="custom-scroll-list">
           <transition-group name="list" tag="v-list">
             <v-list-item
-              v-for="(item, i) in sortedItems"
+              v-for="(item, i) in items"
               :key="item.id"
               :value="item"
               color="primary"
@@ -55,13 +55,13 @@
               @mouseleave="visible = null"
             >
               <template v-slot:prepend>
-                <v-icon @click.stop="doneTheItem(item.id)" :color="item.status.done ? 'grey' : 'green'" icon="mdi-check-circle"></v-icon>
+                <v-icon @click.stop="doneTheItem(i)" :color="item.status.done ? 'grey' : 'green'" icon="mdi-check-circle"></v-icon>
               </template>
               <v-list-item-title :style="{ textDecoration: item.status.done ? 'line-through' : 'none', color: item.status.done ? 'gray' : 'black' }">
                 <b>{{ item.name }}</b>
               </v-list-item-title>
               <template v-if="visible === i" v-slot:append>
-                <v-icon color="red" @click.stop="removeItem(item.id)">mdi-delete</v-icon>
+                <v-icon color="red" @click.stop="removeItem(i)">mdi-delete</v-icon>
               </template>
             </v-list-item>
           </transition-group>
@@ -99,9 +99,9 @@ const visible = ref(null);
 const totalTasks = ref(0);
 const taskDone = ref(0);
 const items = ref([
-  { id: 3, name: 'Do something awesome!', status: { done: false } },
+  { id: 1, name: 'Do something awesome!', status: { done: false } },
   { id: 2, name: 'Buy toilet paper', status: { done: false } },
-  { id: 1, name: 'Learn Nuxt', status: { done: false } },
+  { id: 3, name: 'Learn Nuxt', status: { done: false } },
   // ... (remaining items)
 ]);
 
@@ -148,8 +148,7 @@ onBeforeUnmount(() => {
   saveTasksToLocalStorage();
 });
 
-const doneTheItem = (id) => {
-  const index = items.value.findIndex(item => item.id === id);
+const doneTheItem = (index) => {
   if (index !== -1) {
     items.value[index].status.done = !items.value[index].status.done;
   }
@@ -174,8 +173,7 @@ const addTask = () => {
   }
 };
 
-const removeItem = (id) => {
-  const index = items.value.findIndex(item => item.id === id);
+const removeItem = (index) => {
   if (index !== -1) {
     items.value.splice(index, 1);
     saveTasksToLocalStorage();
